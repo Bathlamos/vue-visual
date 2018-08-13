@@ -66,5 +66,15 @@ module.exports =
 		# need to know the height.  This saves some CPU:
 		# https://jsperf.com/does-reading-one-offset-improve-performance
 		updateContainerSize: ->
-			@containerWidth = @$el.offsetWidth
-			@containerHeight = @$el.offsetHeight if @video
+			@containerWidth = @$el.offsetWidth * @getDevicePixelRatio()
+			@containerHeight = @$el.offsetHeight * @getDevicePixelRatio() if @video
+
+		getDevicePixelRatio: ->
+			ratio = 1
+			# To account for zoom, change to use deviceXDPI instead of systemXDPI
+			if window.screen.systemXDPI != undefined and window.screen.logicalXDPI != undefined and window.screen.systemXDPI > window.screen.logicalXDPI
+				# Only allow for values > 1
+				ratio = window.screen.systemXDPI / window.screen.logicalXDPI
+			else if window.devicePixelRatio != undefined
+				ratio = window.devicePixelRatio
+			ratio

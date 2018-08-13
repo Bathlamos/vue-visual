@@ -5580,10 +5580,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	    },
 	    updateContainerSize: function() {
-	      this.containerWidth = this.$el.offsetWidth;
+	      this.containerWidth = this.$el.offsetWidth * this.getDevicePixelRatio();
 	      if (this.video) {
-	        return this.containerHeight = this.$el.offsetHeight;
+	        return this.containerHeight = this.$el.offsetHeight * this.getDevicePixelRatio();
 	      }
+	    },
+	    getDevicePixelRatio: function() {
+	      var ratio;
+	      ratio = 1;
+	      if (window.screen.systemXDPI !== void 0 && window.screen.logicalXDPI !== void 0 && window.screen.systemXDPI > window.screen.logicalXDPI) {
+	        ratio = window.screen.systemXDPI / window.screen.logicalXDPI;
+	      } else if (window.devicePixelRatio !== void 0) {
+	        ratio = window.devicePixelRatio;
+	      }
+	      return ratio;
 	    }
 	  }
 	};
