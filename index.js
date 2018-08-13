@@ -1,13 +1,13 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("vue"), require("is-numeric"), require("scrollmonitor"));
+		module.exports = factory(require("vue"), require("is-numeric"));
 	else if(typeof define === 'function' && define.amd)
-		define(["vue", "is-numeric", "scrollmonitor"], factory);
+		define(["vue", "is-numeric"], factory);
 	else {
-		var a = typeof exports === 'object' ? factory(require("vue"), require("is-numeric"), require("scrollmonitor")) : factory(root["vue"], root["is-numeric"], root["scrollmonitor"]);
+		var a = typeof exports === 'object' ? factory(require("vue"), require("is-numeric")) : factory(root["vue"], root["is-numeric"]);
 		for(var i in a) (typeof exports === 'object' ? exports : root)[i] = a[i];
 	}
-})(this, function(__WEBPACK_EXTERNAL_MODULE_9__, __WEBPACK_EXTERNAL_MODULE_24__, __WEBPACK_EXTERNAL_MODULE_147__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_9__, __WEBPACK_EXTERNAL_MODULE_24__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -62,13 +62,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  /* script */
 	  __webpack_require__(3),
 	  /* template */
-	  __webpack_require__(150),
+	  __webpack_require__(149),
 	  /* scopeId */
 	  null,
 	  /* cssModules */
 	  null
 	)
-	Component.options.__file = "/Users/reinhard/Work/Open Source/vue-visual/index.vue"
+	Component.options.__file = "/Users/bathlamos/vue-visual/index.vue"
 	if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 	if (Component.options.functional) {console.error("[vue-loader] index.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -5514,15 +5514,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	/*
 	Configuration related to the relationship between the component and the viewport
 	 */
-	var fireWhenReady, resizeAllVms, resizingVms, scrollMonitor, throttle;
-
-	scrollMonitor = __webpack_require__(147);
+	var fireWhenReady, resizeAllVms, resizingVms, throttle;
 
 	throttle = __webpack_require__(10);
 
-	fireWhenReady = __webpack_require__(148);
+	fireWhenReady = __webpack_require__(147);
 
-	__webpack_require__(149);
+	__webpack_require__(148);
 
 	resizingVms = [];
 
@@ -5568,101 +5566,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (this.shouldWatchComponentSize) {
 	      resizingVms.push(this);
 	      this.handleWindowResize();
-	      this.handleWindowResizeThrottled = throttle(this.handleWindowResize, 100);
+	      return this.handleWindowResizeThrottled = throttle(this.handleWindowResize, 100);
 	    }
-	    return ['poster', 'image', 'video'].forEach((function(_this) {
-	      return function(asset) {
-	        return _this.$watch((function() {
-	          return _this.assetScrollId(asset);
-	        }), (function(active) {
-	          if (active) {
-	            return _this.addScrollListeners(asset);
-	          } else {
-	            return _this.removeScrollListeners(asset);
-	          }
-	        }), {
-	          immediate: true
-	        });
-	      };
-	    })(this));
 	  },
 	  destroyed: function() {
-	    var asset, i, len, ref;
-	    ref = ['poster', 'image', 'video'];
-	    for (i = 0, len = ref.length; i < len; i++) {
-	      asset = ref[i];
-	      this.removeScrollListeners(asset);
-	    }
 	    return resizingVms.splice(resizingVms.indexOf(this), 1);
 	  },
 	  methods: {
-	    assetScrollId: function(asset) {
-	      var offset;
-	      if (this.assetUsesScroll(asset)) {
-	        offset = this.assetPropVal(asset, 'offset');
-	        return JSON.stringify(offset);
-	      }
-	    },
-	    assetUsesScroll: function(asset) {
-	      switch (false) {
-	        case !!this[asset]:
-	          return false;
-	        case this.assetPropVal(asset, 'load') !== 'visible':
-	          return true;
-	        case !(asset === 'video' && this.autoplay === 'visible'):
-	          return true;
-	        case !(asset === 'video' && this.autopause === 'visible'):
-	          return true;
-	      }
-	    },
-	    addScrollListeners: function(asset) {
-	      var offset;
-	      this.removeScrollListeners(asset);
-	      if (!(this.$el && this[asset])) {
-	        return;
-	      }
-	      offset = this.assetPropVal(asset, 'offset');
-	      if (typeof offset === 'string') {
-	        offset = parseInt(offset, 10);
-	      }
-	      this[asset + 'ScrollMonitor'] = scrollMonitor.create(this.$el, offset);
-	      this[asset + 'ScrollMonitor'].on('stateChange', (function(_this) {
-	        return function() {
-	          return _this.updateInViewport(asset);
-	        };
-	      })(this));
-	      return fireWhenReady((function(_this) {
-	        return function() {
-	          window.dispatchEvent(new CustomEvent('scroll'));
-	          return _this.updateInViewport(asset);
-	        };
-	      })(this));
-	    },
-	    updateInViewport: function(asset) {
-	      if (!this[asset + 'ScrollMonitor']) {
-	        return;
-	      }
-	      this[asset + 'InViewport'] = this[asset + 'ScrollMonitor'].isInViewport;
-	      if (this.canRemoveScrollListeners(asset)) {
-	        return this.removeScrollListeners(asset);
-	      }
-	    },
-	    canRemoveScrollListeners: function(asset) {
-	      if (!this[asset + 'InViewport']) {
-	        return false;
-	      }
-	      if (asset = 'video') {
-	        return 'visible' === this.autoplay || 'visible' === this.autopause;
-	      } else {
-	        return true;
-	      }
-	    },
-	    removeScrollListeners: function(asset) {
-	      if (this[asset + 'ScrollMonitor']) {
-	        this[asset + 'ScrollMonitor'].destroy();
-	        return delete this[asset + 'ScrollMonitor'];
-	      }
-	    },
 	    handleWindowResize: function() {
 	      this.windowWidth = window.innerWidth;
 	      if (this.shouldWatchComponentSize) {
@@ -5683,12 +5593,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 147 */
 /***/ (function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_147__;
-
-/***/ }),
-/* 148 */
-/***/ (function(module, exports) {
-
 	module.exports = function(cb) {
 	  var handler;
 	  cb();
@@ -5704,7 +5608,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 149 */
+/* 148 */
 /***/ (function(module, exports) {
 
 	/**
@@ -5732,7 +5636,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 150 */
+/* 149 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
